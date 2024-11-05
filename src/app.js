@@ -22,6 +22,7 @@ class PlatformConfig {
 
 const PLATFORM_CONFIGS = {
   default: new PlatformConfig({
+    url: ['meta[property="og:url"]', 'meta[name="twitter:url"]'],
     title: ['meta[property="og:title"]', 'meta[name="twitter:title"]', "title"],
     description: [
       'meta[property="og:description"]',
@@ -31,8 +32,33 @@ const PLATFORM_CONFIGS = {
     image: ['meta[property="og:image"]', 'meta[name="twitter:image"]'],
   }),
   "tiktok.com": new PlatformConfig({
+    url: ['meta[property="og:url"]'],
     title: ['meta[property="og:title"]'],
     description: ['meta[property="og:description"]'],
+    image: ['meta[property="og:image"]', 'meta[name="twitter:image"]'],
+  }),
+  "facebook.com": new PlatformConfig({
+    url: ['meta[property="og:url"]'],
+    title: ['meta[property="og:title"]'],
+    description: ['meta[property="og:description"]'],
+    image: ['meta[property="og:image"]', 'meta[name="twitter:image"]'],
+  }),
+  "twitter.com": new PlatformConfig({
+    url: ['meta[name="twitter:url"]'],
+    title: ['meta[name="twitter:title"]'],
+    description: ['meta[name="twitter:description"]'],
+    image: ['meta[name="twitter:image"]'],
+  }),
+  "youtube.com": new PlatformConfig({
+    url: ['meta[property="og:url"]'],
+    title: ['meta[name="twitter:title"]'],
+    description: ['meta[name="twitter:description"]'],
+    image: ['meta[property="og:image"]', 'meta[name="twitter:image"]'],
+  }),
+  "linkedin.com": new PlatformConfig({
+    url: ['meta[property="og:url"]'],
+    title: ['meta[name="twitter:title"]'],
+    description: ['meta[name="twitter:description"]'],
     image: ['meta[property="og:image"]', 'meta[name="twitter:image"]'],
   }),
 };
@@ -148,7 +174,7 @@ async function getLinkPreview(url) {
     const mainImage = await getThumbnailImageUrl(page, finalUrl);
 
     const preview = new LinkPreview(
-      finalUrl,
+      (await getElementContent(page, config.selectors.url)) || finalUrl,
       await getElementContent(page, config.selectors.title),
       await getElementContent(page, config.selectors.description),
       mainImage
